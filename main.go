@@ -14,5 +14,5 @@ func main() {
 		})
 	})
 
-	router.Run()
+	router.Run("localhost:3000")
 }
