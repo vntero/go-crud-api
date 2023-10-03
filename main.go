@@ -1,18 +1,14 @@
 package main
 
 import (
-	"net/http"
+	"go-crud-api/models"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	router := gin.Default() 
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello World",
-		})
-	})
+	models.ConnectDatabase()
 
 	router.Run("localhost:3000")
 }
