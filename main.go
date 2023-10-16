@@ -2,13 +2,14 @@ package main
 
 import (
 	"go-crud-api/models"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default() 
+    router := gin.Default()
 
-	models.ConnectDatabase()
+    models.ConnectDatabase()
 
-	router.Run("localhost:3000")
+    router.Run("localhost:8080")
 }
