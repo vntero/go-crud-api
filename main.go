@@ -8,11 +8,13 @@ import (
 )
 
 func main() {
-    router := gin.Default()
+	router := gin.Default()
 
-    models.ConnectDatabase()
+	models.ConnectDatabase()
 
 	router.POST("/posts", controllers.CreatePost)
 
-    router.Run("localhost:8080")
+	router.POST("posts", controllers.FindPosts)
+
+	router.Run("localhost:8080")
 }
