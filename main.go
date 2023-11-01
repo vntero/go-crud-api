@@ -14,7 +14,9 @@ func main() {
 
 	router.POST("/posts", controllers.CreatePost)
 
-	router.POST("posts", controllers.FindPosts)
+	router.GET("/posts", controllers.FindPosts)
+
+	router.GET("/posts/:id", controllers.FindPost)
 
 	router.Run("localhost:8080")
 }
