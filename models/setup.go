@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,27 +11,36 @@ import (
 
 var DB *gorm.DB
 
-func ConnectDatabase() {
-    err := godotenv.Load()
-    if err != nil {
-        panic("Error loading .env file")
-    }
+func ConnectDatabase() error {
+	err := godotenv.Load()
+	if err != nil {
+		return fmt.Errorf("error loading .env file: %w", err)
+	}
 
-    dsn := "host=" + os.Getenv("DB_HOST") +
-        " user=" + os.Getenv("DB_USER") +
-        " password=" + os.Getenv("DB_PASSWORD") +
-        " dbname=" + os.Getenv("DB_NAME") +
-        " port=" + os.Getenv("DB_PORT") +
-        " sslmode=" + os.Getenv("DB_SSL_MODE") +
-        " timezone=" + os.Getenv("DB_TIMEZONE")
+	// Set a default value for sslmode if it's not provided
+	sslmode := os.Getenv("DB_SSL_MODE")
+	if sslmode == "" {
+		sslmode = "disable" // You can change this to your desired default
+	}
 
-    database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dsn := "host=" + os.Getenv("DB_HOST") +
+		" user=" + os.Getenv("DB_USER") +
+		" password=" + os.Getenv("DB_PASSWORD") +
+		" dbname=" + os.Getenv("DB_NAME") +
+		" port=" + os.Getenv("DB_PORT") +
+		" sslmode=" + sslmode +
+		" timezone=" + os.Getenv("DB_TIMEZONE")
 
-    if err != nil {
-        panic("Failed to connect to the database!")
-    }
+	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to connect to the database: %w", err)
+	}
 
-    database.AutoMigrate(&Post{})
+	err = database.AutoMigrate(&Post{})
+	if err != nil {
+		return fmt.Errorf("failed to perform auto migration: %w", err)
+	}
 
-    DB = database
+	DB = database
+	return nil
 }
